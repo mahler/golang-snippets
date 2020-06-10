@@ -7,6 +7,8 @@ import (
     "encoding/pem"
     "fmt"
     "os"
+    "time"
+    "net"
 )
 
 func GetCertificatesPEM(address string) (string, error) {
@@ -31,7 +33,22 @@ func GetCertificatesPEM(address string) (string, error) {
 }
 
 func main() {
-    domainArg := os.Args[1]
+    domainArg := ""
+    if len(os.Args) > 1 { 
+        domainArg = os.Args[1]
+    } else {
+        fmt.Println("Missing domain as parameter")
+        os.Exit(10)
+    }
+
+    // Test a server is reachable on port 443s
+    timeout := 1 * time.Second
+    _, err := net.DialTimeout("tcp",domainArg + ":443", timeout)
+
+    if err != nil {
+      fmt.Println("Site unreachable:", err)
+      os.Exit(20)
+    }
 
     certs, err := GetCertificatesPEM(domainArg + ":443")
     if err != nil {
