@@ -1,7 +1,7 @@
 package main
 
 // Source: https://gist.github.com/System-Glitch/301e95975a2645b8ea57c47b0c7cfef4
-/
+//
 // This is an example of a resilient service worker program written in Go.
 //
 // This program will run a worker every 5 seconds and exit when SIGINT or SIGTERM
