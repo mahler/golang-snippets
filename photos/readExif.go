@@ -14,8 +14,10 @@ import (
 	"github.com/rwcarlsen/goexif/tiff"
 )
 
+// Printer is an empty struct to allow any struct to use utility function
 type Printer struct{}
 
+// Walk is a utility function to print all exif fields found.
 func (p Printer) Walk(name exif.FieldName, tag *tiff.Tag) error {
 	fmt.Printf("%40s: %s\n", name, tag)
 	return nil
