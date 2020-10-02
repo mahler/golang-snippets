@@ -40,6 +40,7 @@ func main() {
 func fixName(dirtyName string) string {
 	newName := strings.ToLower(dirtyName)
 	newName = strings.ReplaceAll(newName, " ", "-")
-	newName = strings.ReplaceAll(newName, "_", "-")
+	newName = strings.ReplaceAll(newName, "(", "-")
+	newName = strings.ReplaceAll(newName, ")", "-")
 	return newName
 }
