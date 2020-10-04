@@ -1,5 +1,9 @@
 package main
 
+/*
+ * Simple demonstration of how to read all files in a directory.
+ */
+
 import (
 	"io/ioutil"
 	"log"

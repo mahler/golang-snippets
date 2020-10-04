@@ -1,23 +1,26 @@
- package main
+package main
 
- import (
-    "fmt"
-    "os"
- )
+/*
+ * Simple demonstration of how to read the date modified timestamp of a file.
+ */
 
+import (
+	"fmt"
+	"os"
+)
 
- func main() {
+func main() {
 
-     filename := "fileModifiedDate.go"
+	filename := "fileModifiedDate.go"
 
-     // get last modified time
-     file, err := os.Stat(filename)
+	// get last modified time
+	file, err := os.Stat(filename)
 
-     if err != nil {
-        fmt.Println(err)
-     }
+	if err != nil {
+		fmt.Println(err)
+	}
 
-     modifiedtime := file.ModTime()
+	modifiedtime := file.ModTime()
 
-     fmt.Println("Last modified time : ", modifiedtime)
- }
+	fmt.Println("Last modified time : ", modifiedtime)
+}
