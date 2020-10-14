@@ -18,13 +18,32 @@ func main() {
 	if len(os.Args) < 2 {
 		log.Fatal("please give filename as argument")
 	}
+
 	fname := os.Args[1]
 
-	f, err := os.Open(fname)
+	var dateFileName, err = getDateFromPhotofilename(fname)
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	fixedDate := fixName(dateFileName)
+	fileName := fixedDate
+	var extension = filepath.Ext(fname)
+	fullFileName := fileName + extension
+
+	//	fmt.Println(fullFileName)
+	os.Rename(fname, fullFileName)
+}
+
+func getDateFromPhotofilename(fname string) (string, error) {
+	// Validate that file exits
+	f, err := os.Open(fname)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	// Try to read photoData
 	photoData, err := exif.Decode(f)
 	if err != nil {
 		log.Fatal(err)
@@ -39,13 +58,7 @@ func main() {
 		// fmt.Println("hit 3")
 	}
 
-	fixedDate := fixName(photoDate.String())
-	fileName := fixedDate
-	var extension = filepath.Ext(fname)
-	fullFileName := fileName + extension
-
-	//	fmt.Println(fullFileName)
-	os.Rename(fname, fullFileName)
+	return photoDate.String(), err
 }
 
 func fixName(dirtyName string) string {
