@@ -58,7 +58,14 @@ func getDateFromPhotofilename(fname string) (string, error) {
 		// fmt.Println("hit 3")
 	}
 
-	return photoDate.String(), err
+	returnDate := photoDate.String()
+
+	if len(returnDate) == 0 {
+		theFile, err := os.Stat(fname)
+		returnDate = theFile.ModTime().String()
+	}
+
+	return returnDate, err
 }
 
 func fixName(dirtyName string) string {
