@@ -6,6 +6,8 @@ package main
 //  go get github.com/rwcarlsen/goexif/tiff
 
 import (
+	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -15,24 +17,45 @@ import (
 )
 
 func main() {
-	if len(os.Args) < 2 {
-		log.Fatal("please give filename as argument")
+
+	renameDirectory := ""
+	if len(os.Args) > 1 {
+		renameDirectory = os.Args[1]
+	} else {
+		fmt.Println("Missing directory as parameter")
+		os.Exit(10)
 	}
 
-	fname := os.Args[1]
-
-	var dateFileName, err = getDateFromPhotofilename(fname)
+	files, err := ioutil.ReadDir(renameDirectory)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fixedDate := fixName(dateFileName)
-	fileName := fixedDate
-	var extension = filepath.Ext(fname)
-	fullFileName := fileName + extension
+	for _, f := range files {
+		if !f.IsDir() && (strings.HasSuffix(f.Name(), ".jpg") || strings.HasSuffix(f.Name(), ".png") || strings.HasSuffix(f.Name(), ".webp")) {
+			currentName := f.Name()
 
-	//	fmt.Println(fullFileName)
-	os.Rename(fname, fullFileName)
+			var dateFileName, err = getDateFromPhotofilename(currentName)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			fixedDate := fixName(dateFileName)
+			fileName := fixedDate
+			var extension = filepath.Ext(currentName)
+			fullFileName := fileName + extension
+
+			//	fmt.Println(fullFileName)
+			os.Rename(currentName, fullFileName)
+
+			log.Println(currentName, "->", fullFileName)
+
+			err := os.Rename(renameDirectory+currentName, renameDirectory+fullFileName)
+			if err != nil {
+				log.Fatal(err)
+			}
+		}
+	}
 }
 
 func getDateFromPhotofilename(fname string) (string, error) {
